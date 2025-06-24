@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BC Baby care 市場データインフォグラフィック</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 
+    Infographic Narrative Plan:
+    1. Header: Catchy title for the buyer.
+    2. Market Overview: Present the growing market size and key consumer trends to establish the opportunity.
+    3. Key Purchasing Drivers: Detail the main consumer trends (Safety, Premium, Convenience, Design) using various charts.
+    4. Brand Introduction: Introduce BC Baby care's philosophy, scale, and commitment to quality to build trust.
+    5. Competitive Analysis: Directly compare the proposed products against key competitors to highlight their unique value proposition.
+    6. Product Spotlight: Deep dive into the product features, connecting them back to consumer needs.
+    7. Consumer Journey: Visualize the modern purchasing funnel.
+    8. LLM Innovation Lab (Interactive): A forward-looking interactive element to suggest a collaborative partnership.
+    9. Footer: Concluding message.
+
+    Visualization Choices (NO SVG / NO MERMAID JS CONFIRMED):
+    - Brand Value: Icon-based cards. Goal: Inform. Method: Styled HTML with Unicode characters.
+    - Market Size: Big Number display. Goal: Inform. Method: Styled HTML.
+    - Regional Market Share: Bar Chart. Goal: Compare. Library: Chart.js (Canvas).
+    - Parent Priorities (Safety, Convenience): Donut Charts. Goal: Compare. Library: Chart.js (Canvas).
+    - Competitive Comparison: Table. Goal: Organize/Compare. Method: Styled HTML `<table>`.
+    - Consumer Needs Flowchart: Diagram. Goal: Organize. Method: Styled HTML with Tailwind CSS.
+
+    Color Palette Chosen: "Energetic & Playful"
+    - #FF6B6B (Vibrant Red/Pink)
+    - #FFD166 (Yellow)
+    - #06D6A0 (Green/Teal)
+    - #118AB2 (Blue)
+    - #073B4C (Dark Blue/Text)
+    -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f0f4f8;
+            color: #073B4C;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flowchart-arrow {
+            font-size: 2.5rem;
+            color: #FFD166;
+            line-height: 1;
+        }
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .table-header {
+            background-color: #073B4C;
+            color: white;
+        }
+        .highlight-cell {
+            background-color: #e0f7fa; /* A light cyan from the palette */
+        }
+        .brand-icon {
+            font-size: 3rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#118AB2] mb-3">ベビー用品市場の次世代を切り拓く</h1>
+            <p class="text-lg md:text-xl text-[#073B4C]">BC Baby care ご担当バイヤー様向け戦略提案</p>
+        </header>
+
+        <main class="space-y-20">
+
+            <section id="market-overview">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#118AB2]">1. 市場概観と消費者トレンド</h2>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-center mb-4">成長を続けるベビー市場</h3>
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div>
+                                <p class="text-lg font-bold">国内市場規模 (2022)</p>
+                                <p class="text-5xl font-bold text-[#06D6A0]">4.35<span class="text-2xl">兆円</span></p>
+                                <p class="text-gray-600">前年比 0.5%増</p>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold">世界市場規模 (2024)</p>
+                                <p class="text-5xl font-bold text-[#06D6A0]">565<span class="text-2xl">億ドル</span></p>
+                                <p class="text-gray-600">年平均2.9%で成長</p>
+                            </div>
+                        </div>
+                         <p class="mt-6 text-center text-gray-700">少子化の中でも、一人当たりの投資額は増加。「プレミアム化」が市場を牽引しています。</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-center mb-4">地域別市場シェア</h3>
+                        <div class="chart-container h-[250px] md:h-[280px]">
+                            <canvas id="regionalShareChart"></canvas>
+                        </div>
+                        <p class="mt-2 text-center text-gray-700">アジア太平洋地域が最大の市場を形成しており、トレンドの発信地となっています。</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="key-drivers">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#118AB2]">2. 現代の親が重視する4つのポイント</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#FF6B6B]">① 安全・ナチュラル志向</h3>
+                        <p class="mb-4">有害化学物質を含まない、オーガニック素材への需要が顕著です。赤ちゃんの健康を最優先する親の意識の表れです。</p>
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <div class="chart-container h-[180px] w-[180px] flex-shrink-0">
+                                <canvas id="safetyChart"></canvas>
+                            </div>
+                            <p class="text-lg font-semibold flex-1">新米の親の<span class="text-3xl font-bold text-[#FF6B6B]">68%</span>以上が、天然由来で化学物質を含まない製品を優先的に選んでいます。</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#06D6A0]">② 利便性・多機能</h3>
+                        <p class="mb-4">共働き世帯の増加に伴い、育児の負担を減らす便利な商品への需要が高まっています。オンラインでの購買もこのトレンドを後押ししています。</p>
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <div class="chart-container h-[180px] w-[180px] flex-shrink-0">
+                                <canvas id="convenienceChart"></canvas>
+                            </div>
+                            <p class="text-lg font-semibold flex-1">ベビー用品の世界売上の<span class="text-3xl font-bold text-[#06D6A0]">48%</span>以上がオンライン経由。手間を省ける製品が支持されています。</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#FFD166]">③ プレミアム・品質重視</h3>
+                        <p class="mb-4">多少高価でも、高品質で長く使える製品を選ぶ傾向が強まっています。一人の子どもにより良いものを与えたいというニーズの現れです。</p>
+                        <div class="text-center p-4 bg-amber-50 rounded-lg">
+                            <p class="text-lg font-semibold">米国の親の<span class="text-3xl font-bold text-[#FFD166]">62%</span>がプレミアムなベビー用品を好むと回答しています。</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#118AB2]">④ デザイン性・SNS映え</h3>
+                        <p class="mb-4">ミレニアル世代の親にとって、SNSは重要な情報源。「写真映え」するおしゃれなデザインは、商品の魅力の一部です。</p>
+                        <div class="text-center p-4 bg-blue-50 rounded-lg">
+                            <p class="text-lg font-semibold">親の<span class="text-3xl font-bold text-[#118AB2]">40%</span>以上が、SNS経由で新しいベビーグッズを発見しています。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="brand-introduction">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#118AB2]">3. BC Baby careのご紹介</h2>
+                <div class="text-center mb-10 max-w-3xl mx-auto">
+                    <p class="text-lg">BC Baby careは単なるベビー用品ブランドではありません。私たちは「愛のために、再設計する」という理念のもと、デザイナーの視点から業界の常識を問い直し、Z世代の親たちに新しい育児ライフスタイルを提案するグローバルカンパニーです。</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white rounded-lg shadow-xl p-6 transform hover:scale-105 transition-transform duration-300">
+                        <div class="brand-icon text-[#06D6A0] mb-4">🌍</div>
+                        <h3 class="text-2xl font-bold mb-2">グローバルな信頼</h3>
+                        <p class="text-lg">世界<span class="font-bold text-2xl mx-1">30</span>カ国以上で展開</p>
+                        <p class="text-lg"><span class="font-bold text-2xl mx-1">4500万</span>世帯が愛用</p>
+                        <p class="text-sm mt-2">2022年度年間売上: 80億元</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-xl p-6 transform hover:scale-105 transition-transform duration-300">
+                        <div class="brand-icon text-[#FFD166] mb-4">🏆</div>
+                        <h3 class="text-2xl font-bold mb-2">デザインと品質の証</h3>
+                        <p class="text-lg">レッド・ドット・デザイン賞</p>
+                        <p class="text-lg">ドイツiFデザイン賞</p>
+                        <p class="text-sm mt-2">世界的なデザインアワードを多数受賞</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-xl p-6 transform hover:scale-105 transition-transform duration-300">
+                        <div class="brand-icon text-[#FF6B6B] mb-4">🔬</div>
+                        <h3 class="text-2xl font-bold mb-2">最高水準の製造</h3>
+                        <p class="text-lg">クラス10万の自社クリーンルーム</p>
+                        <p class="text-lg">Dow, Eastman等、世界企業と提携</p>
+                        <p class="text-sm mt-2">ハイブランド基準の品質管理</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="competitive-analysis">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#118AB2]">4. 競合比較とBC Baby careの優位性</h2>
+                <div class="space-y-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">ストローマグ市場</h3>
+                        <p class="mb-6 max-w-3xl mx-auto text-center">ストローマグ市場は「漏れにくさ」「洗いやすさ」が重要な選択基準です。BC Baby careはこれらの基本機能を満たした上で、デザイン性と圧倒的な利便性で差別化します。</p>
+                        <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+                            <table class="w-full text-sm text-left">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th scope="col" class="p-4">製品 (ブランド)</th>
+                                        <th scope="col" class="p-4">漏れにくさ</th>
+                                        <th scope="col" class="p-4">手入れのしやすさ</th>
+                                        <th scope="col" class="p-4">付加価値</th>
+                                        <th scope="col" class="p-4 font-bold">BCの優位点</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <th scope="row" class="p-4 font-bold">BC フルーツストローカップ</th>
+                                        <td class="p-4">◎ (ワンタッチロック＋スリット)</td>
+                                        <td class="p-4">◎ (全パーツ食洗機・全消毒法対応)</td>
+                                        <td class="p-4">高品質PPSU, 冷温対応</td>
+                                        <td class="p-4 font-bold highlight-cell">SNS映えするデザインと圧倒的な洗浄性</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <th scope="row" class="p-4">まほうびんマグ (サーモス)</th>
+                                        <td class="p-4">○</td>
+                                        <td class="p-4">○ (一部食洗機対応)</td>
+                                        <td class="p-4">圧倒的な保冷力</td>
+                                        <td class="p-4">-</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <th scope="row" class="p-4">トライシリーズ (リッチェル)</th>
+                                        <td class="p-4">◎</td>
+                                        <td class="p-4">△ (溝が多く複雑)</td>
+                                        <td class="p-4">成長段階に合わせた展開</td>
+                                        <td class="p-4">-</td>
+                                    </tr>
+                                     <tr class="border-b">
+                                        <th scope="row" class="p-4">ラクマグ (コンビ)</th>
+                                        <td class="p-4">◎</td>
+                                        <td class="p-4">◎ (パッキンレス)</td>
+                                        <td class="p-4">飲みやすさの工夫</td>
+                                        <td class="p-4">-</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="p-4">シッピーカップ (b.box)</th>
+                                        <td class="p-4">◎ (重り付きストロー)</td>
+                                        <td class="p-4">○ (専用ブラシ推奨)</td>
+                                        <td class="p-4">どんな姿勢でも飲める</td>
+                                        <td class="p-4">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">虫よけブレスレット市場</h3>
+                        <p class="mb-6 max-w-3xl mx-auto text-center">虫よけ市場では「安全性(天然成分)」が最重要視されます。BC Baby careは安全性に加え、持続性と子供が喜ぶ「楽しさ」で新たな需要を創出します。</p>
+                        <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+                            <table class="w-full text-sm text-left">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th scope="col" class="p-4">製品 (ブランド)</th>
+                                        <th scope="col" class="p-4">主成分</th>
+                                        <th scope="col" class="p-4">持続時間</th>
+                                        <th scope="col" class="p-4">付加価値</th>
+                                        <th scope="col" class="p-4 font-bold">BCの優位点</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <th scope="row" class="p-4 font-bold">BC くるくるブレスレット</th>
+                                        <td class="p-4">天然精油4種</td>
+                                        <td class="p-4">◎ (約30日)</td>
+                                        <td class="p-4">防水, 交換ペレット付</td>
+                                        <td class="p-4 font-bold highlight-cell">圧倒的な持続性と子供が喜ぶデザイン</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <th scope="row" class="p-4">香Ring (KINCHO)</th>
+                                        <td class="p-4">天然精油</td>
+                                        <td class="p-4">△ (約12時間)</td>
+                                        <td class="p-4">水濡れOK, 低価格</td>
+                                        <td class="p-4">-</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="p-4">カラーバンド (PARA'KITO)</th>
+                                        <td class="p-4">天然精油18種</td>
+                                        <td class="p-4">◎ (ペレット式)</td>
+                                        <td class="p-4">繰り返し利用, 高価格</td>
+                                        <td class="p-4">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section id="product-spotlight">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#118AB2]">5. ニーズに応える新商品提案</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+                        <h3 class="text-2xl font-bold mb-4">BCフルーツストローカップ</h3>
+                        <div class="w-full aspect-square rounded-lg mb-4 overflow-hidden">
+                            <img src="https://placehold.co/400x400/FF6B6B/FFFFFF?text=スイカカップ" alt="BCフルーツストローカップ スイカ" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/ffffff?text=Image+Not+Found';">
+                        </div>
+                        <p class="mb-4 flex-grow">「安全・便利・映える」を全て満たす、フルーツモチーフのストローマグです。漏れない設計と全パーツ消毒可能な手軽さで親の負担を軽減し、育児に彩りを加えます。</p>
+                        <ul class="space-y-2 text-lg">
+                            <li class="flex items-center"><span class="text-[#06D6A0] mr-2">✅</span><strong>安全性:</strong> ドイツ製PPSU、BPAフリー</li>
+                            <li class="flex items-center"><span class="text-[#06D6A0] mr-2">✅</span><strong>利便性:</strong> 漏れ防止ロック、食洗機・全消毒法対応</li>
+                            <li class="flex items-center"><span class="text-[#06D6A0] mr-2">✅</span><strong>デザイン性:</strong> SNS映えする可愛いフルーツ型</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+                        <h3 class="text-2xl font-bold mb-4">くるくるブレスレット（虫よけ）</h3>
+                         <div class="w-full aspect-square rounded-lg mb-4 overflow-hidden">
+                           <img src="https://placehold.co/400x400/118AB2/FFFFFF?text=くるくるブレス" alt="くるくるブレスレット（虫よけ）" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/ffffff?text=Image+Not+Found';">
+                        </div>
+                        <p class="mb-4 flex-grow">天然アロマで虫を寄せ付けないブレスレット。化学成分ディート不使用で、肌の弱いお子様にも安心。風車がくるくる回り、子どもが嫌がらずに楽しく虫よけできます。</p>
+                        <ul class="space-y-2 text-lg">
+                            <li class="flex items-center"><span class="text-[#06D6A0] mr-2">✅</span><strong>安全性:</strong> ディート不使用、天然精油100%</li>
+                            <li class="flex items-center"><span class="text-[#06D6A0] mr-2">✅</span><strong>持続性:</strong> 1個で約30日間効果が持続</li>
+                            <li class="flex items-center"><span class="text-[#06D6A0] mr-2">✅</span><strong>楽しさ:</strong> 回る風車で子どもが喜んで着用</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="consumer-journey">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#118AB2]">6. 現代の消費行動フロー</h2>
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <p class="text-center mb-8">SNSが購買行動に大きな影響を与えています。商品の発見から購入、そして共有までが一連の流れになっており、特に「共有」されやすいデザインが重要です。</p>
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center">
+                        <div class="flowchart-item bg-[#073B4C] text-white p-4 rounded-lg shadow-md w-full md:w-auto">
+                            <p class="font-bold text-lg">発見</p><p>SNS・ブログ</p>
+                        </div>
+                        <div class="flowchart-arrow transform md:rotate-0 rotate-90">→</div>
+                        <div class="flowchart-item bg-[#118AB2] text-white p-4 rounded-lg shadow-md w-full md:w-auto">
+                            <p class="font-bold text-lg">興味・比較</p><p>オンラインレビュー</p>
+                        </div>
+                        <div class="flowchart-arrow transform md:rotate-0 rotate-90">→</div>
+                        <div class="flowchart-item bg-[#06D6A0] text-white p-4 rounded-lg shadow-md w-full md:w-auto">
+                            <p class="font-bold text-lg">購入</p><p>店舗・オンライン</p>
+                        </div>
+                         <div class="flowchart-arrow transform md:rotate-0 rotate-90">→</div>
+                        <div class="flowchart-item bg-[#FF6B6B] text-white p-4 rounded-lg shadow-md w-full md:w-auto">
+                            <p class="font-bold text-lg">共有</p><p>SNS投稿</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <section id="llm-innovation-lab">
+                <h2 class="text-3xl font-bold text-center mb-10 text-[#118AB2]">7. イノベーションラボ：次のヒット商品を共に創る</h2>
+                <div class="bg-white rounded-lg shadow-lg p-8 text-center max-w-3xl mx-auto">
+                    <p class="mb-6 text-lg">市場トレンドに基づき、次のヒット商品アイデアをAIが生成します。これは我々の持つデータと洞察力の一例です。ぜひ、貴社と共に新たな価値を創造したいと思います。</p>
+                    <button id="generateIdeaBtn" class="bg-[#FF6B6B] text-white font-bold py-3 px-8 rounded-full hover:bg-red-500 transition-colors text-xl shadow-md">
+                        新商品アイデアを生成する
+                    </button>
+                    <div id="loadingIndicator" class="hidden mt-6">
+                        <p class="text-lg animate-pulse text-[#118AB2]">AIがアイデアを生成中...</p>
+                    </div>
+                    <div id="productIdeaOutput" class="hidden mt-6 p-6 bg-gray-50 rounded-lg text-left border border-[#FFD166]">
+                        <p id="generatedText" class="whitespace-pre-wrap"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-20 pt-10 border-t border-gray-300">
+            <p class="text-lg text-[#073B4C]">BC Baby careは、現代の消費者が求める価値を提供し、貴社の売場に新たな魅力を加えることができると確信しています。</p>
+            <p class="mt-2 text-gray-600">本提案に関するご質問、心よりお待ちしております。</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                } else {
+                    return label;
+                }
+            };
+            
+            const defaultChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                           font: {
+                                size: 14,
+                                family: "'Noto Sans JP', sans-serif"
+                           }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: tooltipTitleCallback
+                        }
+                    }
+                }
+            };
+
+            const regionalShareCtx = document.getElementById('regionalShareChart');
+            if(regionalShareCtx) {
+                new Chart(regionalShareCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['アジア太平洋', '北米', '欧州'],
+                        datasets: [{
+                            label: '市場シェア (%)',
+                            data: [38, 29, 26],
+                            backgroundColor: ['#06D6A0', '#118AB2', '#FFD166'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { ...defaultChartOptions,
+                        indexAxis: 'y',
+                        plugins: { ...defaultChartOptions.plugins,
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: { grid: { display: false } },
+                            y: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            const safetyCtx = document.getElementById('safetyChart');
+            if(safetyCtx){
+                new Chart(safetyCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['天然・化学物質フリーを優先', 'その他'],
+                        datasets: [{
+                            data: [68, 32],
+                            backgroundColor: ['#FF6B6B', '#E9ECEF'],
+                            hoverOffset: 4,
+                            borderWidth: 0,
+                        }]
+                    },
+                    options: { ...defaultChartOptions,
+                        cutout: '60%',
+                        plugins: { ...defaultChartOptions.plugins,
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+            
+            const convenienceCtx = document.getElementById('convenienceChart');
+            if(convenienceCtx){
+                new Chart(convenienceCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['オンライン売上', '実店舗売上'],
+                        datasets: [{
+                            data: [48, 52],
+                            backgroundColor: ['#06D6A0', '#E9ECEF'],
+                            hoverOffset: 4,
+                            borderWidth: 0,
+                        }]
+                    },
+                    options: { ...defaultChartOptions,
+                       cutout: '60%',
+                       plugins: { ...defaultChartOptions.plugins,
+                           legend: { display: false }
+                       }
+                    }
+                });
+            }
+
+            const generateIdeaBtn = document.getElementById('generateIdeaBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const productIdeaOutput = document.getElementById('productIdeaOutput');
+            const generatedText = document.getElementById('generatedText');
+
+            if(generateIdeaBtn) {
+                generateIdeaBtn.addEventListener('click', async () => {
+                    loadingIndicator.classList.remove('hidden');
+                    productIdeaOutput.classList.add('hidden');
+                    generatedText.textContent = '';
+
+                    const prompt = `
+日本のベビー用品市場の以下のトレンドを踏まえてください：
+- 安全、自然、無毒な製品への高い需要（68%が天然・化学物質フリーを優先）。
+- 高品質な製品への嗜好（62%がプレミアム製品を好み、74%が皮膚科テスト済み・無添加を選択）。
+- 利便性と多機能製品への強いニーズ（液体ミルク、スマート機能など）。
+- デザインと「SNS映え」の重要性（40%がインフルエンサー経由で製品を発見）。
+- 育児をサポートするベビーテックへの関心の高まり。
+
+これらのトレンドのうち少なくとも2つを活用し、日本のドン・キホーテでの販売に適した革新的なベビー用品のアイデアを1つ提案してください。その主要な特徴と、それが特定の消費者のニーズにどのように応えるかを日本語で記述してください。出力形式は、まず製品名を【製品名】として、次に【特徴】、【ターゲット顧客】、【成功の鍵】の項目で説明してください。
+                    `;
+
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; 
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const result = await response.json();
+
+                        if (result.candidates && result.candidates.length > 0 &&
+                            result.candidates[0].content && result.candidates[0].content.parts &&
+                            result.candidates[0].content.parts.length > 0) {
+                            const text = result.candidates[0].content.parts[0].text;
+                            generatedText.textContent = text;
+                            productIdeaOutput.classList.remove('hidden');
+                        } else {
+                            generatedText.textContent = 'アイデアを生成できませんでした。もう一度お試しください。';
+                            productIdeaOutput.classList.remove('hidden');
+                        }
+                    } catch (error) {
+                        console.error('Error generating idea:', error);
+                        generatedText.textContent = 'アイデアの生成中にエラーが発生しました。インターネット接続を確認し、再度お試しください。';
+                        productIdeaOutput.classList.remove('hidden');
+                    } finally {
+                        loadingIndicator.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
