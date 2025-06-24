@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ベビー用品市場データインフォグラフィック</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 
+    Infographic Narrative Plan:
+    1.  Header: Catchy title to grab attention.
+    2.  Market Overview: Present the big picture of the market size and key regional shares.
+    3.  Key Purchasing Drivers: Detail the main consumer trends (Safety, Premium, Convenience, Design) using various charts.
+    4.  Consumer Needs Flowchart: Visualize the modern parent's decision-making process.
+    5.  Product Spotlight: Connect the proposed products' features directly to the identified consumer needs.
+    6.  New Product Idea Generation (LLM Feature): Generate new product ideas based on market trends.
+    7.  Footer: Concluding message.
+
+    Visualization Choices (NO SVG / NO MERMAID JS CONFIRMED):
+    -   Market Size: Big Number display. Goal: Inform. Method: Styled HTML.
+    -   Global Market Growth: Line Chart. Goal: Change. Library: Chart.js (Canvas).
+    -   Regional Market Share: Bar Chart. Goal: Compare. Library: Chart.js (Canvas).
+    -   Parent Priorities (Safety, Convenience): Donut Charts. Goal: Inform/Compare. Library: Chart.js (Canvas).
+    -   Parent Discoveries (SNS): Big Number display. Goal: Inform. Method: Styled HTML.
+    -   Consumer Needs Flowchart: Diagram. Goal: Organize. Method: Styled HTML with Tailwind CSS (NO SVG, NO Mermaid JS).
+
+    Color Palette Chosen: "Energetic & Playful"
+    -   #FF6B6B (Vibrant Red/Pink)
+    -   #FFD166 (Yellow)
+    -   #06D6A0 (Green/Teal)
+    -   #118AB2 (Blue)
+    -   #073B4C (Dark Blue/Text)
+    -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flowchart-arrow {
+            position: relative;
+            width: 1.5rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flowchart-arrow::after {
+            content: '→';
+            font-size: 2rem;
+            color: #FFD166;
+        }
+        .flowchart-item {
+            flex: 1;
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body class="text-[#073B4C]">
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#118AB2] mb-2">ベビー用品市場の今と未来</h1>
+            <p class="text-lg md:text-xl text-[#073B4C]">消費者が本当に求めるモノとは？ドン・キホーテ様向け提案資料</p>
+        </header>
+
+        <main class="space-y-12">
+
+            <section id="market-overview">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#118AB2]">1. 市場概観：成長を続けるベビー市場</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col justify-center items-center">
+                        <h3 class="text-xl font-bold mb-2">国内市場規模 (2022年)</h3>
+                        <p class="text-5xl font-bold text-[#06D6A0]">4.35<span class="text-3xl">兆円</span></p>
+                        <p class="text-lg text-gray-600 mt-2">前年比 0.5%増</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col justify-center items-center">
+                        <h3 class="text-xl font-bold mb-2">世界市場規模 (2024年)</h3>
+                        <p class="text-5xl font-bold text-[#06D6A0]">565<span class="text-3xl">億ドル</span></p>
+                        <p class="text-lg text-gray-600 mt-2">年平均2.9%で成長予測</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col justify-center items-center md:col-span-2 lg:col-span-1">
+                        <h3 class="text-xl font-bold mb-2">地域別市場シェア</h3>
+                        <div class="chart-container h-[250px] md:h-[300px]">
+                            <canvas id="regionalShareChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="key-drivers">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#118AB2]">2. 現代の親が重視する4つのポイント</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#FF6B6B]">① 安全・ナチュラル志向</h3>
+                        <p class="mb-4">有害化学物質を含まない、オーガニック素材への需要が顕著です。赤ちゃんの健康を最優先する親の意識の表れです。</p>
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <div class="chart-container h-[200px] w-[200px] flex-shrink-0">
+                                <canvas id="safetyChart"></canvas>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-lg font-semibold">新米の親の<span class="text-3xl font-bold text-[#FF6B6B]">68%</span>以上が、天然由来で化学物質を含まない製品を優先的に選んでいます。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#FFD166]">② プレミアム・品質重視</h3>
+                        <p class="mb-4">多少高価でも、高品質で長く使える製品を選ぶ傾向が強まっています。一人の子どもにより良いものを与えたいというニーズの現れです。</p>
+                         <div class="text-center">
+                            <p class="text-lg font-semibold">米国の親の<span class="text-3xl font-bold text-[#FFD166]">62%</span>がプレミアムなベビー用品（スキンケア・安全グッズ）を好むと回答しています。</p>
+                             <div class="mt-4 p-4 bg-amber-100 rounded-lg">
+                                <p class="font-bold">特に衛生用品では、<span class="text-2xl">74%</span>の親が「皮膚科テスト済み・無添加」など安心できる製品を選んでいます。</p>
+                             </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#06D6A0]">③ 利便性・多機能</h3>
+                        <p class="mb-4">共働き世帯の増加に伴い、育児の負担を減らす便利な商品への需要が高まっています。オンラインでの購買もこのトレンドを後押ししています。</p>
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <div class="chart-container h-[200px] w-[200px] flex-shrink-0">
+                                <canvas id="convenienceChart"></canvas>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-lg font-semibold">ベビー用品の世界売上の<span class="text-3xl font-bold text-[#06D6A0]">48%</span>以上がオンライン経由。親の<span class="text-3xl font-bold text-[#06D6A0]">62%</span>超がネット通販の利便性を支持しています。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4 text-[#118AB2]">④ デザイン性・SNS映え</h3>
+                        <p class="mb-4">ミレニアル世代の親にとって、SNSは重要な情報源。「写真映え」するおしゃれなデザインは、商品の魅力の一部です。</p>
+                        <div class="text-center p-6 bg-blue-100 rounded-lg">
+                            <p class="text-lg font-semibold">親の<span class="text-4xl font-bold text-[#118AB2]">40%</span>以上が</p>
+                            <p class="mt-2 text-lg">インフルエンサーや育児ブログ経由で新しいベビーグッズを発見しています。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="consumer-journey">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#118AB2]">3. 現代の消費行動フロー</h2>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <p class="text-center mb-6">SNSが購買行動に大きな影響を与えています。商品の発見から購入、そして共有までが一連の流れになっています。</p>
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-center">
+                        <div class="flowchart-item bg-[#073B4C] text-white p-4 rounded-lg shadow-md">
+                            <p class="font-bold text-lg">発見</p>
+                            <p>SNS・ブログ</p>
+                        </div>
+                        <div class="flowchart-arrow transform md:-rotate-0 rotate-90"></div>
+                        <div class="flowchart-item bg-[#118AB2] text-white p-4 rounded-lg shadow-md">
+                            <p class="font-bold text-lg">興味・比較</p>
+                            <p>オンラインレビュー</p>
+                        </div>
+                        <div class="flowchart-arrow transform md:-rotate-0 rotate-90"></div>
+                        <div class="flowchart-item bg-[#06D6A0] text-white p-4 rounded-lg shadow-md">
+                            <p class="font-bold text-lg">購入</p>
+                            <p>店舗・オンライン</p>
+                        </div>
+                         <div class="flowchart-arrow transform md:-rotate-0 rotate-90"></div>
+                        <div class="flowchart-item bg-[#FF6B6B] text-white p-4 rounded-lg shadow-md">
+                            <p class="font-bold text-lg">共有</p>
+                            <p>SNS投稿</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="product-spotlight">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#118AB2]">4. ニーズに応える新商品提案</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4">BCフルーツストローカップ</h3>
+                        <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+                           <p class="text-gray-500">（商品画像）</p>
+                        </div>
+                        <p class="mb-4">「安全・便利・映える」を全て満たす、フルーツモチーフのストローマグです。漏れない設計と安全素材で親も安心。</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✅</span><strong>安全性:</strong> 食品衛生法適合、BPAフリー</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✅</span><strong>利便性:</strong> 漏れ防止ロック、食洗機・レンジ対応</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✅</span><strong>デザイン性:</strong> SNS映えする可愛いフルーツ型</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold mb-4">くるくるブレスレット（虫よけ）</h3>
+                         <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+                           <p class="text-gray-500">（商品画像）</p>
+                        </div>
+                        <p class="mb-4">天然アロマで虫を寄せ付けないブレスレット。化学成分不使用で、肌の弱いお子様にも安心して使えます。</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✅</span><strong>安全性:</strong> ディート不使用、天然精油100%</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✅</span><strong>利便性:</strong> 腕に巻くだけ、長時間持続、防水</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✅</span><strong>楽しさ:</strong> 可愛いデザインで子どもが嫌がらない</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="llm-product-ideas" class="mt-12">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#FF6B6B]">✨ 新商品アイデア生成 ✨</h2>
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <p class="mb-4">最新の市場トレンドと消費者ニーズに基づき、Gemini AIが新しいベビー用品のアイデアを提案します。</p>
+                    <button id="generateIdeaBtn" class="bg-[#118AB2] hover:bg-[#073B4C] text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 transform hover:scale-105 shadow-md">
+                        新しいアイデアを生成する
+                    </button>
+                    <div id="loadingIndicator" class="mt-4 text-[#118AB2] hidden">
+                        <p>アイデア生成中...</p>
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#118AB2] mx-auto mt-2"></div>
+                    </div>
+                    <div id="productIdeaOutput" class="mt-8 p-6 bg-[#f0f9ff] border border-[#118AB2] rounded-lg text-left hidden">
+                        <h3 class="text-xl font-bold mb-4 text-[#073B4C]">生成されたアイデア:</h3>
+                        <p id="generatedText" class="text-lg leading-relaxed text-gray-800"></p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-12 pt-8 border-t border-gray-300">
+            <p class="text-lg">これらの商品は、現代の消費者が求める価値を提供し、ドン・キホーテ様の売場に新たな魅力を加えることができると確信しています。</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                } else {
+                    return label;
+                }
+            };
+            
+            const defaultChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: tooltipTitleCallback
+                        }
+                    }
+                }
+            };
+
+            const regionalShareCtx = document.getElementById('regionalShareChart').getContext('2d');
+            new Chart(regionalShareCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['アジア太平洋', '北米', '欧州'],
+                    datasets: [{
+                        label: '市場シェア (%)',
+                        data: [38, 29, 26],
+                        backgroundColor: ['#06D6A0', '#118AB2', '#FFD166'],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: { ...defaultChartOptions,
+                    indexAxis: 'y',
+                    plugins: { ...defaultChartOptions.plugins,
+                       legend: { display: false }
+                    }
+                }
+            });
+
+            const safetyCtx = document.getElementById('safetyChart').getContext('2d');
+            new Chart(safetyCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['天然・化学物質フリーを優先', 'その他'],
+                    datasets: [{
+                        data: [68, 32],
+                        backgroundColor: ['#FF6B6B', '#E9ECEF'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: { ...defaultChartOptions,
+                    cutout: '60%',
+                    plugins: { ...defaultChartOptions.plugins,
+                       legend: { display: false }
+                    }
+                 }
+            });
+            
+            const convenienceCtx = document.getElementById('convenienceChart').getContext('2d');
+            new Chart(convenienceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['オンライン売上', '実店舗売上'],
+                    datasets: [{
+                        data: [48, 52],
+                        backgroundColor: ['#06D6A0', '#E9ECEF'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: { ...defaultChartOptions,
+                   cutout: '60%',
+                   plugins: { ...defaultChartOptions.plugins,
+                       legend: { display: false }
+                    }
+                }
+            });
+
+            // LLM Integration
+            const generateIdeaBtn = document.getElementById('generateIdeaBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const productIdeaOutput = document.getElementById('productIdeaOutput');
+            const generatedText = document.getElementById('generatedText');
+
+            generateIdeaBtn.addEventListener('click', async () => {
+                loadingIndicator.classList.remove('hidden');
+                productIdeaOutput.classList.add('hidden');
+                generatedText.textContent = ''; // Clear previous content
+
+                const prompt = `
+Given the following trends in the baby product market in Japan:
+- High demand for safe, natural, and non-toxic products (68% prioritize natural/chemical-free).
+- Preference for premium quality (62% prefer premium, 74% choose dermatologically tested/additive-free).
+- Strong need for convenience and multi-functional products (liquid milk, smart features).
+- Importance of design and 'SNS-映え' (40% discover products via influencers).
+- Growing interest in baby tech for parenting support.
+
+Propose one innovative baby product idea that leverages at least two of these trends, suitable for sale at Don Quijote in Japan. Describe its key features and how it meets specific consumer needs. Output in Japanese.
+                `;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        generatedText.textContent = text;
+                        productIdeaOutput.classList.remove('hidden');
+                    } else {
+                        generatedText.textContent = 'アイデアを生成できませんでした。もう一度お試しください。';
+                        productIdeaOutput.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error('Error generating idea:', error);
+                    generatedText.textContent = 'アイデアの生成中にエラーが発生しました。インターネット接続を確認し、再度お試しください。';
+                    productIdeaOutput.classList.remove('hidden');
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
