@@ -71,6 +71,13 @@
             flex: 1;
             min-width: 120px;
         }
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
     </style>
 </head>
 <body class="text-[#073B4C]">
@@ -191,8 +198,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <h3 class="text-2xl font-bold mb-4">BCフルーツストローカップ</h3>
-                        <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                           <img src = "suika.jpg">
+                        <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                           <img src="suika.jpg" alt="BCフルーツストローカップ" class="product-image">
                         </div>
                         <p class="mb-4">「安全・便利・映える」を全て満たす、フルーツモチーフのストローマグです。漏れない設計と安全素材で親も安心。</p>
                         <ul class="space-y-2">
@@ -203,8 +210,8 @@
                     </div>
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <h3 class="text-2xl font-bold mb-4">くるくるブレスレット（虫よけ）</h3>
-                         <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                           <img src = "suika.jpg">
+                         <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                           <img src="suika.jpg" alt="くるくるブレスレット（虫よけ）" class="product-image">
                         </div>
                         <p class="mb-4">天然アロマで虫を寄せ付けないブレスレット。化学成分不使用で、肌の弱いお子様にも安心して使えます。</p>
                         <ul class="space-y-2">
@@ -387,3 +394,4 @@ Propose one innovative baby product idea that leverages at least two of these tr
     </script>
 </body>
 </html>
+
